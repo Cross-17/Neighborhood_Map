@@ -1,0 +1,15 @@
+html, body {
+ height: 100%; margin: 0; padding: 0;
+}
+#map { 
+  height: 100%;
+  width: :100%;
+}
+ul {
+  list-style: none;
+  width: 100%;
+  font-size: 17px;
+}
+li {
+  margin: 0 0 12px 0;
+}
