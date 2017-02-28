@@ -2,6 +2,34 @@
     
     <head>
         <link href="style.css" rel="stylesheet">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+    </head>
+    
+    <body>
+        <div class="row">
+            <aside class="col-sm-3 collapse in" id="sidebar" data-parent="#tbutton">
+                <div>
+                    <h1>
+                        Locations
+                    </h1>
+                </div>
+                <div>
+                    <input data-bind="value: searchString" type="text" id = "input">
+                    <input type="submit" value="Filter" id = "button">
+                </div>
+                <ul data-bind="foreach: filtered">
+                    <li data-bind="text: title, click: $parent.animate">
+                    </li>
+                </ul>
+            </aside>
+            <main class="col-sm-9">
+                <button id="tbutton" type="button" class="btn btn-info" data-toggle="collapse"
+                data-target="#sidebar">
+                    Toggle
+                </button>
+                <div id="map"></div>
+            </main>
+        </div>
         <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
         crossorigin="anonymous">
         </script>
@@ -12,41 +40,13 @@
         <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
         integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
         crossorigin="anonymous">
-        <script type='text/javascript' src='knockout-3.4.1.js'>
+        <script src='knockout-3.4.1.js'>
         </script>
-        <meta name="viewport" content="width=device-width,initial-scale=1">
-    </head>
-    
-    <body>
-        <div class="row ">
-            <div class="col-sm-3 collapse in" id="sidebar" data-parent="#tbutton">
-                <div>
-                    <h1>
-                        Locations
-                    </h1>
-                </div>
-                <div>
-                    <input data-bind="value: searchString" type="text" style="width:65%">
-                    <input type="submit" value="Filter" style="width:30%">
-                </div>
-                <ul data-bind="foreach: filtered">
-                    <li data-bind="text: title, click: $parent.animate">
-                    </li>
-                </ul>
-            </div>
-            <div class="col-sm-9">
-                <button id="tbutton" type="button" class="btn btn-info" data-toggle="collapse"
-                data-target="#sidebar">
-                    Toggle
-                </button>
-                <div id="map">
-                </div>
-            </div>
-        </div>
-        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyBcTK62fmlEIfXWG-cmBunWb2JvDZ8T3HU">
+        <script src="app.js">
         </script>
-        <script type="text/javascript" src="app.js">
+        <script async defer src="https://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyBcTK62fmlEIfXWG-cmBunWb2JvDZ8T3HU&callback=mapSuccess" onerror="mapError()">
         </script>
+
     </body>
 
 </html>

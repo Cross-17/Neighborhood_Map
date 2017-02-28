@@ -43,11 +43,12 @@ var ViewModel = function() {
     }
 
     var map;
-    this.searchString = ko.observable("");
+    this.searchString = ko.observable('');
     initMap();
     this.filtered = ko.computed(function() {
         function check(item) {
-            var result = item.title.includes(self.searchString());
+            var lowersearch = self.searchString().toLowerCase();
+            var result = item.title.toLowerCase().includes(lowersearch);
             if (!result) {
                 item.marker.setVisible(false);
             } else {
@@ -55,7 +56,7 @@ var ViewModel = function() {
             }
             return result;
         }
-        return locations.filter(check);
+        return ko.utils.arrayFilter(self.cityList(),check);
     });
     this.animate = function(clicked) {
         new google.maps.event.trigger(clicked.marker, 'click');
@@ -71,7 +72,7 @@ var ViewModel = function() {
 
         var infowindow = new google.maps.InfoWindow();
 
-        for (i = 0; i < locations.length; i++) {
+        for (var i = 0; i < locations.length; i++) {
             var position = locations[i].location;
             var title = locations[i].title;
             var marker = new google.maps.Marker({
@@ -88,7 +89,7 @@ var ViewModel = function() {
                 setTimeout(function() {
                     self.setAnimation(null);
                 },
-                2000);
+                2100);
             });
         }
         function populateinfowindow(marker, infowindow) {
@@ -98,29 +99,33 @@ var ViewModel = function() {
                 var searchcontent = "lat=" + marker.position.lat() + "&lon=" + marker.position.lng();
                 var url = baseurl + searchcontent;
                 var imageurl = "";
-                var RequestTimeout = setTimeout(function() {
-                    alert("failed to get Flickr resources");
-                },
-                8000);
 
                 $.getJSON(url,
                 function(data) {
+                    var photos = data.photos;
+                    if(!photos){
+                        alert("Error Json data returned");
+                        return;
+                    }
                     var index = RandomNum(0, 100);
                     imageurl = data.photos.photo[index].url_m;
-                    clearTimeout(RequestTimeout);
                     infowindow.setContent('<div><p>image around ' + marker.title + '</p><img src= "' + imageurl + '""><p>from flickr</p></div>');
                     infowindow.open(map, marker);
-                    infowindow.addListener('cliseclick',
-                    function() {
-                        infowindow.setMarker(null);
-                    });
-                });
+                }).fail(function(jqXHR, textStatus, errorThrown){
+                    alert("error get Flickr data")
+                }) ;
 
             }
         }
     }
 };
-ko.applyBindings(new ViewModel());
+function mapSuccess(){
+    ko.applyBindings(new ViewModel());
+}
+
+function mapError(){
+    alert('Failing load google map')
+}
 
 function RandomNum(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
